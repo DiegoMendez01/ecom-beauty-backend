@@ -62,4 +62,10 @@ public class ProductController
             return ResponseEntity.notFound().build();
         }
     }
+    
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable Integer categoryId) {
+        List<Product> products = productService.getProductsByCategoryId(categoryId);
+        return ResponseEntity.ok(products);
+    }
 }

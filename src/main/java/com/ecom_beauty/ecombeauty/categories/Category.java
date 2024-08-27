@@ -31,7 +31,6 @@ public class Category {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Add this constructor
     public Category(String name) {
         this.name = name;
     }

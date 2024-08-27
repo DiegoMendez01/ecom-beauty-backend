@@ -71,6 +71,10 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    // Add this default constructor
+    public Product() {
+    }
+
     public Product(String name, String description, BigDecimal price, int stock, Category category) {
         this.name = name;
         this.description = description;

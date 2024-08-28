@@ -15,6 +15,8 @@ import com.ecom_beauty.ecombeauty.products.Product;
 import com.ecom_beauty.ecombeauty.products.ProductRepository;
 import com.ecom_beauty.ecombeauty.users.User;
 import com.ecom_beauty.ecombeauty.users.UserRepository;
+import com.ecom_beauty.ecombeauty.favorites.Favorite;
+import com.ecom_beauty.ecombeauty.favorites.FavoriteRepository;
 
 @SpringBootApplication
 public class EcombeautyApplication {
@@ -24,7 +26,7 @@ public class EcombeautyApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initDatabase(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository) {
+	public CommandLineRunner initDatabase(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository, FavoriteRepository favoriteRepository) {
 		return args -> {
 			boolean isDev = Arrays.asList(args).contains("--profile=dev");
 			boolean rebuildDb = Arrays.asList(args).contains("--rebuild-db");
@@ -44,7 +46,7 @@ public class EcombeautyApplication {
 				));
 
 				// Products
-				productRepository.saveAll(List.of(
+				List<Product> products = productRepository.saveAll(List.of(
 					new Product("Radiant Glow Serum", "Illuminate your skin with this vitamin C-infused serum", BigDecimal.valueOf(49.99), 100, categories.get(0)),
 					new Product("Velvet Matte Lipstick", "Long-lasting, creamy matte lipstick in 'Ruby Passion'", BigDecimal.valueOf(22.50), 200, categories.get(1)),
 					new Product("Silk Smooth Shampoo", "Nourishing shampoo with argan oil for silky, smooth hair", BigDecimal.valueOf(18.99), 150, categories.get(2)),
@@ -57,11 +59,19 @@ public class EcombeautyApplication {
 					new Product("Midnight Jasmine Perfume Oil", "Intoxicating blend of jasmine, vanilla, and musk", BigDecimal.valueOf(55.00), 60, categories.get(0))
 				));
 
-				userRepository.saveAll(List.of(
+				List<User> users = userRepository.saveAll(List.of(
 					new User("John", "Doe", "john.doe@example.com", "password", "https://example.com/profile.jpg"),
 					new User("Jane", "Doe", "jane.doe@example.com", "password", "https://example.com/profile.jpg"),
 					new User("Alice", "Smith", "alice.smith@example.com", "password", "https://example.com/profile.jpg"),
 					new User("Bob", "Johnson", "bob.johnson@example.com", "password", "https://example.com/profile.jpg")
+				));
+
+				// Favorites
+				favoriteRepository.saveAll(List.of(
+					new Favorite(users.get(0), products.get(0)),
+					new Favorite(users.get(1), products.get(1)),
+					new Favorite(users.get(2), products.get(2)),
+					new Favorite(users.get(3), products.get(3))
 				));
 				
 				System.out.println("Database initialization complete.");

@@ -45,7 +45,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
         }
 
-    	User newUser = new User();
+    	User newUser = new User(userSignupDTO.getFirstName(), userSignupDTO.getLastName(), userSignupDTO.getEmail(), new BCryptPasswordEncoder().encode(userSignupDTO.getPasswordHash()), userSignupDTO.getProfilePhotoUrl());
         newUser.setPasswordHash(new BCryptPasswordEncoder().encode(userSignupDTO.getPasswordHash()));
         newUser.setFirstName(userSignupDTO.getFirstName());
         newUser.setLastName(userSignupDTO.getLastName());

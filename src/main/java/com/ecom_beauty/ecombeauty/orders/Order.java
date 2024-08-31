@@ -77,4 +77,15 @@ public class Order {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    public Order(User user, OrderStatus status, DeliveryMethod deliveryMethod,
+                 PaymentMethod paymentMethod, UserAddress shippingAddress,
+                 BigDecimal totalAmount) {
+        this.user = user;
+        this.status = status;
+        this.deliveryMethod = deliveryMethod;
+        this.paymentMethod = paymentMethod;
+        this.shippingAddress = shippingAddress;
+        this.totalAmount = totalAmount;
+    }
 }

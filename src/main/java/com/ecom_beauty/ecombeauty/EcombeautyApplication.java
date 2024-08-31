@@ -11,12 +11,12 @@ import org.springframework.context.annotation.Bean;
 
 import com.ecom_beauty.ecombeauty.categories.Category;
 import com.ecom_beauty.ecombeauty.categories.CategoryRepository;
+import com.ecom_beauty.ecombeauty.favorites.Favorite;
+import com.ecom_beauty.ecombeauty.favorites.FavoriteRepository;
 import com.ecom_beauty.ecombeauty.products.Product;
 import com.ecom_beauty.ecombeauty.products.ProductRepository;
 import com.ecom_beauty.ecombeauty.users.User;
 import com.ecom_beauty.ecombeauty.users.UserRepository;
-import com.ecom_beauty.ecombeauty.favorites.Favorite;
-import com.ecom_beauty.ecombeauty.favorites.FavoriteRepository;
 
 @SpringBootApplication
 public class EcombeautyApplication {

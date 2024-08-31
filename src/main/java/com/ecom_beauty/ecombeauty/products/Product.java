@@ -93,4 +93,12 @@ public class Product {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    public void updateRating(BigDecimal newRating) {
+        this.rating = newRating;
+    }
+
+    public Integer getId() {
+        return this.id;
+    }
 }

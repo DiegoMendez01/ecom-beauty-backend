@@ -13,6 +13,9 @@ import com.ecom_beauty.ecombeauty.categories.Category;
 import com.ecom_beauty.ecombeauty.categories.CategoryRepository;
 import com.ecom_beauty.ecombeauty.favorites.Favorite;
 import com.ecom_beauty.ecombeauty.favorites.FavoriteRepository;
+import com.ecom_beauty.ecombeauty.productReviews.ProductReview;
+import com.ecom_beauty.ecombeauty.productReviews.ProductReviewRepository;
+import com.ecom_beauty.ecombeauty.productReviews.ProductReviewService;
 import com.ecom_beauty.ecombeauty.products.Product;
 import com.ecom_beauty.ecombeauty.products.ProductRepository;
 import com.ecom_beauty.ecombeauty.users.User;
@@ -26,7 +29,7 @@ public class EcombeautyApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initDatabase(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository, FavoriteRepository favoriteRepository) {
+	public CommandLineRunner initDatabase(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository, FavoriteRepository favoriteRepository, ProductReviewRepository productReviewRepository, ProductReviewService productReviewService) {
 		return args -> {
 			boolean isDev = Arrays.asList(args).contains("--profile=dev");
 			boolean rebuildDb = Arrays.asList(args).contains("--rebuild-db");
@@ -66,7 +69,13 @@ public class EcombeautyApplication {
 					new User("Bob", "Johnson", "bob.johnson@example.com", "password", "https://example.com/profile.jpg")
 				));
 
-				// Favorites
+				productReviewService.saveProductReviewAndUpdateRating(
+					new ProductReview(products.get(0), users.get(0), 5, "Amazing product!")
+				);
+				productReviewService.saveProductReviewAndUpdateRating(
+					new ProductReview(products.get(1), users.get(1), 4, "Great quality!")
+				);
+
 				favoriteRepository.saveAll(List.of(
 					new Favorite(users.get(0), products.get(0)),
 					new Favorite(users.get(1), products.get(1)),

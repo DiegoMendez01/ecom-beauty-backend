@@ -18,5 +18,6 @@ public interface ProductService {
     void deleteProduct(Integer id);
     Product updateProduct(Integer id, Product productDetails);
     Product getProductByName(String name);
-    Product getProductByCategoryId(Integer categoryId);    
+    Product getProductByCategoryId(Integer categoryId);
+    void updateProductRating(Integer productId);
 }

@@ -1,11 +1,12 @@
 package com.ecom_beauty.ecombeauty.productReviews;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProductReviewRepository extends JpaRepository<ProductReview, Integer> {
@@ -14,10 +15,12 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, In
     Optional<ProductReview> findByProductIdAndUserId(Integer productId, Integer userId);
     
     @Query("SELECT AVG(pr.rating) FROM ProductReview pr WHERE pr.product.id = :productId")
-    Double calculateAverageRatingForProduct(Integer productId);
+    Double calculateAverageRatingForProduct(@Param("productId") Integer productId);
     
     List<ProductReview> findByProductIdOrderByCreatedAtDesc(Integer productId);
     
     @Query("SELECT pr FROM ProductReview pr WHERE pr.product.id = :productId AND pr.rating >= :minRating")
     List<ProductReview> findHighRatedReviewsForProduct(Integer productId, Integer minRating);
+    
+    List<ProductReview> findByProductIdAndRatingGreaterThanEqual(Integer productId, Integer minRating);
 }

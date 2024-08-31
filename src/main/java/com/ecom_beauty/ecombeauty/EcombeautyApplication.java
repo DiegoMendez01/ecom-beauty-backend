@@ -66,7 +66,6 @@ public class EcombeautyApplication {
 					new User("Bob", "Johnson", "bob.johnson@example.com", "password", "https://example.com/profile.jpg")
 				));
 
-				// Favorites
 				favoriteRepository.saveAll(List.of(
 					new Favorite(users.get(0), products.get(0)),
 					new Favorite(users.get(1), products.get(1)),

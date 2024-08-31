@@ -71,6 +71,18 @@ public class Product {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    // Add this default constructor
+    public Product() {
+    }
+
+    public Product(String name, String description, BigDecimal price, int stock, Category category) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.category = category;
+    }
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -80,5 +92,13 @@ public class Product {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public void updateRating(BigDecimal newRating) {
+        this.rating = newRating;
+    }
+
+    public Integer getId() {
+        return this.id;
     }
 }

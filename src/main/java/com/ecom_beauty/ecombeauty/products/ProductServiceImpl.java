@@ -1,18 +1,25 @@
 package com.ecom_beauty.ecombeauty.products;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.ecom_beauty.ecombeauty.productReviews.ProductReviewRepository;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ProductReviewRepository productReviewRepository;
 
     @Override
     public List<Product> getAllProducts() {
@@ -84,5 +91,24 @@ public class ProductServiceImpl implements ProductService {
     public Product getProductByCategoryId(Integer categoryId) {
         return productRepository.findFirstByCategory_Id(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with category ID: " + categoryId));
+    }
+
+    @Override
+    @Transactional
+    public void updateProductRating(Integer productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        Double averageRating = productReviewRepository.calculateAverageRatingForProduct(productId);
+
+        if (averageRating == null) {
+            product.updateRating(BigDecimal.ZERO);
+        } else {
+            BigDecimal roundedRating = BigDecimal.valueOf(averageRating)
+                    .setScale(2, RoundingMode.HALF_UP);
+            product.updateRating(roundedRating);
+        }
+
+        productRepository.save(product);
     }
 }

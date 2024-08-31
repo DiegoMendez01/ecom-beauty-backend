@@ -14,4 +14,6 @@ public interface ProductReviewService {
     List<ProductReview> getHighRatedReviewsForProduct(Integer productId, Integer minRating);
     ProductReview saveProductReview(ProductReview productReview);
     void deleteProductReview(Integer id);
+    ProductReview saveProductReviewAndUpdateRating(ProductReview productReview);
+    void deleteProductReviewAndUpdateRating(Integer id);
 }

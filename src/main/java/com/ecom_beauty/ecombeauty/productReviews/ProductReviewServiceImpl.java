@@ -1,16 +1,21 @@
 package com.ecom_beauty.ecombeauty.productReviews;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.ecom_beauty.ecombeauty.products.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductReviewServiceImpl implements ProductReviewService {
 
     @Autowired
     private ProductReviewRepository productReviewRepository;
+
+    @Autowired
+    private ProductService productService;
 
     @Override
     public List<ProductReview> getAllProductReviews() {
@@ -49,7 +54,7 @@ public class ProductReviewServiceImpl implements ProductReviewService {
 
     @Override
     public List<ProductReview> getHighRatedReviewsForProduct(Integer productId, Integer minRating) {
-        return productReviewRepository.findHighRatedReviewsForProduct(productId, minRating);
+        return productReviewRepository.findByProductIdAndRatingGreaterThanEqual(productId, minRating);
     }
 
     @Override
@@ -60,5 +65,27 @@ public class ProductReviewServiceImpl implements ProductReviewService {
     @Override
     public void deleteProductReview(Integer id) {
         productReviewRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public ProductReview saveProductReviewAndUpdateRating(ProductReview productReview) {
+        ProductReview savedReview = productReviewRepository.save(productReview);
+        productService.updateProductRating(savedReview.getProduct().getId());
+        return savedReview;
+    }
+
+    @Override
+    @Transactional
+    public void deleteProductReviewAndUpdateRating(Integer id) {
+        Optional<ProductReview> reviewOptional = productReviewRepository.findById(id);
+        if (reviewOptional.isPresent()) {
+            ProductReview review = reviewOptional.get();
+            Integer productId = review.getProduct().getId();
+            productReviewRepository.deleteById(id);
+            productService.updateProductRating(productId);
+        } else {
+            throw new RuntimeException("Review not found");
+        }
     }
 }

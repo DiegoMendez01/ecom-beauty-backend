@@ -46,6 +46,16 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public User() {}
+
+    public User(String firstName, String lastName, String email, String passwordHash, String profilePhotoUrl) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.profilePhotoUrl = profilePhotoUrl;
+    }
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

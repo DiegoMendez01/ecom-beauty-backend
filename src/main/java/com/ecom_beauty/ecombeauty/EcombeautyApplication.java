@@ -11,8 +11,13 @@ import org.springframework.context.annotation.Bean;
 
 import com.ecom_beauty.ecombeauty.categories.Category;
 import com.ecom_beauty.ecombeauty.categories.CategoryRepository;
+import com.ecom_beauty.ecombeauty.deliveryMethods.DeliveryMethod;
 import com.ecom_beauty.ecombeauty.favorites.Favorite;
 import com.ecom_beauty.ecombeauty.favorites.FavoriteRepository;
+import com.ecom_beauty.ecombeauty.orderStatus.OrderStatus;
+import com.ecom_beauty.ecombeauty.orders.Order;
+import com.ecom_beauty.ecombeauty.orders.OrderRepository;
+import com.ecom_beauty.ecombeauty.paymentMethods.PaymentMethod;
 import com.ecom_beauty.ecombeauty.productReviews.ProductReview;
 import com.ecom_beauty.ecombeauty.productReviews.ProductReviewRepository;
 import com.ecom_beauty.ecombeauty.productReviews.ProductReviewService;
@@ -29,7 +34,7 @@ public class EcombeautyApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initDatabase(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository, FavoriteRepository favoriteRepository, ProductReviewRepository productReviewRepository, ProductReviewService productReviewService) {
+	public CommandLineRunner initDatabase(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository, FavoriteRepository favoriteRepository, ProductReviewRepository productReviewRepository, ProductReviewService productReviewService, OrderRepository orderRepository) {
 		return args -> {
 			boolean isDev = Arrays.asList(args).contains("--profile=dev");
 			boolean rebuildDb = Arrays.asList(args).contains("--rebuild-db");
@@ -81,6 +86,11 @@ public class EcombeautyApplication {
 					new Favorite(users.get(1), products.get(1)),
 					new Favorite(users.get(2), products.get(2)),
 					new Favorite(users.get(3), products.get(3))
+				));
+
+				// orders
+				orderRepository.saveAll(List.of(
+					new Order(users.get(0), OrderStatus.PENDING, DeliveryMethod.STANDARD, PaymentMethod.CREDIT_CARD, users.get(0).getAddress(), BigDecimal.valueOf(100.00))
 				));
 				
 				System.out.println("Database initialization complete.");

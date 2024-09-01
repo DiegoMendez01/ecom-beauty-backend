@@ -34,7 +34,7 @@ public class EcombeautyApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initDatabase(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository, FavoriteRepository favoriteRepository, ProductReviewRepository productReviewRepository, ProductReviewService productReviewService, OrderRepository orderRepository) {
+	public CommandLineRunner initDatabase(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository, FavoriteRepository favoriteRepository, ProductReviewRepository productReviewRepository, ProductReviewService productReviewService, OrderRepository orderRepository, DeliveryMethodRepository deliveryMethodRepository) {
 		return args -> {
 			boolean isDev = Arrays.asList(args).contains("--profile=dev");
 			boolean rebuildDb = Arrays.asList(args).contains("--rebuild-db");
@@ -90,7 +90,7 @@ public class EcombeautyApplication {
 
 				// orders
 				orderRepository.saveAll(List.of(
-					new Order(users.get(0), OrderStatus.PENDING, DeliveryMethod.STANDARD, PaymentMethod.CREDIT_CARD, users.get(0).getAddress(), BigDecimal.valueOf(100.00))
+					new Order(users.get(0), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard"), PaymentMethod.CREDIT_CARD, users.get(0).getAddress(), BigDecimal.valueOf(100.00))
 				));
 				
 				System.out.println("Database initialization complete.");

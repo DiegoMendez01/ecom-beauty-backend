@@ -7,9 +7,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import com.ecom_beauty.ecombeauty.orderStatus.OrderStatus;
-
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findByUserId(Integer userId);
@@ -17,8 +14,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> findByCreatedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
     List<Order> findByTotalAmountGreaterThan(BigDecimal amount);
     
-    @Query("SELECT o FROM Order o WHERE o.user.id = :userId AND o.status.id = :statusId")
-    List<Order> findByUserIdAndStatusId(Integer userId, Integer statusId);
+    @Query("SELECT o FROM Order o WHERE o.user.id = :userId AND o.status = :status")
+    List<Order> findByUserIdAndStatus(Integer userId, OrderStatus status);
     
     @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.createdAt BETWEEN :startDate AND :endDate")
     BigDecimal calculateTotalRevenueBetweenDates(LocalDateTime startDate, LocalDateTime endDate);

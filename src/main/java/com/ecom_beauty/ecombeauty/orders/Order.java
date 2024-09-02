@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.ecom_beauty.ecombeauty.deliveryMethods.DeliveryMethod;
-import com.ecom_beauty.ecombeauty.orderStatus.OrderStatus;
-import com.ecom_beauty.ecombeauty.paymentMethods.PaymentMethod;
 import com.ecom_beauty.ecombeauty.promoCodes.PromoCode;
 import com.ecom_beauty.ecombeauty.userAddresses.UserAddress;
 import com.ecom_beauty.ecombeauty.users.User;
@@ -22,6 +20,8 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Data;
 
 @Data
@@ -36,16 +36,16 @@ public class Order {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private OrderStatus status;
 
     @ManyToOne
     @JoinColumn(name = "delivery_method_id", nullable = false)
     private DeliveryMethod deliveryMethod;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_method_id", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method", nullable = false)
     private PaymentMethod paymentMethod;
 
     @ManyToOne
@@ -77,4 +77,16 @@ public class Order {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    public Order(User user, OrderStatus status, DeliveryMethod deliveryMethod,
+                 PaymentMethod paymentMethod, UserAddress shippingAddress,
+                 BigDecimal totalAmount) {
+        this.user = user;
+        this.status = status;
+        this.deliveryMethod = deliveryMethod;
+        this.paymentMethod = paymentMethod;
+        this.shippingAddress = shippingAddress;
+        this.totalAmount = totalAmount;
+    }
 }
+

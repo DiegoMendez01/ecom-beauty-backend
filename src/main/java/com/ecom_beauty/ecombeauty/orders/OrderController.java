@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ecom_beauty.ecombeauty.orderStatus.OrderStatus;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -42,10 +41,8 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrdersByUserId(userId));
     }
 
-    @GetMapping("/status/{statusId}")
-    public ResponseEntity<List<Order>> getOrdersByStatus(@PathVariable Integer statusId) {
-        OrderStatus status = new OrderStatus();
-        status.setId(statusId);
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<Order>> getOrdersByStatus(@PathVariable OrderStatus status) {
         return ResponseEntity.ok(orderService.getOrdersByStatus(status));
     }
 
@@ -61,11 +58,11 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getOrdersByTotalAmountGreaterThan(amount));
     }
 
-    @GetMapping("/user/{userId}/status/{statusId}")
-    public ResponseEntity<List<Order>> getOrdersByUserIdAndStatusId(
+    @GetMapping("/user/{userId}/status/{status}")
+    public ResponseEntity<List<Order>> getOrdersByUserIdAndStatus(
             @PathVariable Integer userId,
-            @PathVariable Integer statusId) {
-        return ResponseEntity.ok(orderService.getOrdersByUserIdAndStatusId(userId, statusId));
+            @PathVariable OrderStatus status) {
+        return ResponseEntity.ok(orderService.getOrdersByUserIdAndStatus(userId, status));
     }
 
     @GetMapping("/revenue")

@@ -1,6 +1,7 @@
 package com.ecom_beauty.ecombeauty.users;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -111,5 +112,12 @@ public class User implements UserDetails {
 				.filter(UserAddress::isDefault)
 				.findFirst()
 				.orElse(null);
+	}
+
+	public void addAddress(UserAddress address) {
+	    if (this.addresses == null) {
+	        this.addresses = new ArrayList<>();
+	    }
+	    this.addresses.add(address);
 	}
 }

@@ -55,6 +55,19 @@ public class UserAddress {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public UserAddress() {}
+
+    public UserAddress(User user, String addressLine1, String addressLine2, String city, String state, String postalCode, String country, boolean isDefault) {
+        this.user = user;
+        this.addressLine1 = addressLine1;
+        this.addressLine2 = addressLine2;
+        this.city = city;
+        this.state = state;
+        this.postalCode = postalCode;
+        this.country = country;
+        this.isDefault = isDefault;
+    }
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

@@ -24,6 +24,8 @@ import com.ecom_beauty.ecombeauty.productReviews.ProductReviewRepository;
 import com.ecom_beauty.ecombeauty.productReviews.ProductReviewService;
 import com.ecom_beauty.ecombeauty.products.Product;
 import com.ecom_beauty.ecombeauty.products.ProductRepository;
+import com.ecom_beauty.ecombeauty.userAddresses.UserAddress;
+import com.ecom_beauty.ecombeauty.userAddresses.UserAddressRepository;
 import com.ecom_beauty.ecombeauty.users.User;
 import com.ecom_beauty.ecombeauty.users.UserRepository;
 
@@ -35,7 +37,7 @@ public class EcombeautyApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initDatabase(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository, FavoriteRepository favoriteRepository, ProductReviewRepository productReviewRepository, ProductReviewService productReviewService, OrderRepository orderRepository, DeliveryMethodRepository deliveryMethodRepository) {
+	public CommandLineRunner initDatabase(CategoryRepository categoryRepository, ProductRepository productRepository, UserRepository userRepository, FavoriteRepository favoriteRepository, ProductReviewRepository productReviewRepository, ProductReviewService productReviewService, OrderRepository orderRepository, DeliveryMethodRepository deliveryMethodRepository, UserAddressRepository userAddressRepository) {
 		return args -> {
 			boolean isDev = Arrays.asList(args).contains("--profile=dev");
 			boolean rebuildDb = Arrays.asList(args).contains("--rebuild-db");
@@ -75,6 +77,19 @@ public class EcombeautyApplication {
 					new User("Bob", "Johnson", "bob.johnson@example.com", "password", "https://example.com/profile.jpg")
 				));
 
+				List<UserAddress> addresses = userAddressRepository.saveAll(List.of(
+					new UserAddress(users.get(0), "123 Main St", "", "New York", "NY", "10001", "USA", true),
+					new UserAddress(users.get(1), "456 Main St", "", "New York", "NY", "10001", "USA", true),
+					new UserAddress(users.get(2), "789 Main St", "", "New York", "NY", "10001", "USA", true),
+					new UserAddress(users.get(3), "1011 Main St", "", "New York", "NY", "10001", "USA", true)
+				));
+
+				// Update users with their addresses
+				for (int i = 0; i < users.size(); i++) {
+					users.get(i).addAddress(addresses.get(i));
+				}
+				userRepository.saveAll(users);
+
 				productReviewService.saveProductReviewAndUpdateRating(
 					new ProductReview(products.get(0), users.get(0), 5, "Amazing product!")
 				);
@@ -95,11 +110,11 @@ public class EcombeautyApplication {
 				));
 
 				orderRepository.saveAll(List.of(
-					new Order(users.get(0), OrderStatus.PENDING, deliveryMethodRepository.findByName("Pickup").get(), PaymentMethod.CREDIT_CARD, users.get(0).getAddress(), BigDecimal.valueOf(100.00)),
-					new Order(users.get(1), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.CREDIT_CARD, users.get(1).getAddress(), BigDecimal.valueOf(100.00)),
-					new Order(users.get(2), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.CREDIT_CARD, users.get(2).getAddress(), BigDecimal.valueOf(100.00)),
-					new Order(users.get(3), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.CREDIT_CARD, users.get(3).getAddress(), BigDecimal.valueOf(100.00)),
-					new Order(users.get(0), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.CREDIT_CARD, users.get(0).getAddress(), BigDecimal.valueOf(100.00))
+					new Order(users.get(0), OrderStatus.PENDING, deliveryMethodRepository.findByName("Pickup").get(), PaymentMethod.CASH_ON_DELIVERY, users.get(0).getAddress(), BigDecimal.valueOf(100.00)),
+					new Order(users.get(1), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.CASH_ON_DELIVERY, users.get(1).getAddress(), BigDecimal.valueOf(100.00)),
+					new Order(users.get(2), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.CASH_ON_DELIVERY, users.get(2).getAddress(), BigDecimal.valueOf(100.00)),
+					new Order(users.get(3), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.CASH_ON_DELIVERY, users.get(3).getAddress(), BigDecimal.valueOf(100.00)),
+					new Order(users.get(0), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.STRIPE, users.get(0).getAddress(), BigDecimal.valueOf(100.00))
 				));
 				
 				System.out.println("Database initialization complete.");

@@ -8,8 +8,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ecom_beauty.ecombeauty.orderStatus.OrderStatus;
-
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -47,8 +45,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getOrdersByUserIdAndStatusId(Integer userId, Integer statusId) {
-        return orderRepository.findByUserIdAndStatusId(userId, statusId);
+    public List<Order> getOrdersByUserIdAndStatus(Integer userId, OrderStatus status) {
+        return orderRepository.findByUserIdAndStatus(userId, status);
     }
 
     @Override

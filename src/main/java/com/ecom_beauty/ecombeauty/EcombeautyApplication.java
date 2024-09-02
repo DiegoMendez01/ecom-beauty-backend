@@ -12,12 +12,13 @@ import org.springframework.context.annotation.Bean;
 import com.ecom_beauty.ecombeauty.categories.Category;
 import com.ecom_beauty.ecombeauty.categories.CategoryRepository;
 import com.ecom_beauty.ecombeauty.deliveryMethods.DeliveryMethod;
+import com.ecom_beauty.ecombeauty.deliveryMethods.DeliveryMethodRepository;
 import com.ecom_beauty.ecombeauty.favorites.Favorite;
 import com.ecom_beauty.ecombeauty.favorites.FavoriteRepository;
-import com.ecom_beauty.ecombeauty.orderStatus.OrderStatus;
 import com.ecom_beauty.ecombeauty.orders.Order;
 import com.ecom_beauty.ecombeauty.orders.OrderRepository;
-import com.ecom_beauty.ecombeauty.paymentMethods.PaymentMethod;
+import com.ecom_beauty.ecombeauty.orders.OrderStatus;
+import com.ecom_beauty.ecombeauty.orders.PaymentMethod;
 import com.ecom_beauty.ecombeauty.productReviews.ProductReview;
 import com.ecom_beauty.ecombeauty.productReviews.ProductReviewRepository;
 import com.ecom_beauty.ecombeauty.productReviews.ProductReviewService;
@@ -88,9 +89,17 @@ public class EcombeautyApplication {
 					new Favorite(users.get(3), products.get(3))
 				));
 
-				// orders
+				deliveryMethodRepository.saveAll(List.of(
+					new DeliveryMethod("Pickup", BigDecimal.valueOf(0.00)),
+					new DeliveryMethod("Standard", BigDecimal.valueOf(5.99))						
+				));
+
 				orderRepository.saveAll(List.of(
-					new Order(users.get(0), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard"), PaymentMethod.CREDIT_CARD, users.get(0).getAddress(), BigDecimal.valueOf(100.00))
+					new Order(users.get(0), OrderStatus.PENDING, deliveryMethodRepository.findByName("Pickup").get(), PaymentMethod.CREDIT_CARD, users.get(0).getAddress(), BigDecimal.valueOf(100.00)),
+					new Order(users.get(1), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.CREDIT_CARD, users.get(1).getAddress(), BigDecimal.valueOf(100.00)),
+					new Order(users.get(2), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.CREDIT_CARD, users.get(2).getAddress(), BigDecimal.valueOf(100.00)),
+					new Order(users.get(3), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.CREDIT_CARD, users.get(3).getAddress(), BigDecimal.valueOf(100.00)),
+					new Order(users.get(0), OrderStatus.PENDING, deliveryMethodRepository.findByName("Standard").get(), PaymentMethod.CREDIT_CARD, users.get(0).getAddress(), BigDecimal.valueOf(100.00))
 				));
 				
 				System.out.println("Database initialization complete.");
